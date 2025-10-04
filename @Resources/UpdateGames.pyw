@@ -35,7 +35,10 @@ def process_appmanifest_files(appmanifest_files, manifest_path):
     for appmanifest_file in appmanifest_files:
         app_id = appmanifest_file[12:-4]  # Extract numerical part of the file name
         app_ids_to_skip = {'228980'}
-
+        
+        if not app_id.isdigit():
+            continue
+            
         if app_id not in app_ids_to_skip:
             processed_ids.append(app_id)
 
@@ -76,7 +79,7 @@ def create_meter(id_key, index, image, image_path, search, is_hidden, is_extra=F
         'Image': {
             'Meter': 'Image',
             'MeterStyle': 'GameStyle',
-            'ImageName': f'{image_path}\\#{id_key}#\\{"header" if image == "Logo" else "icon"}.jpg' if not is_extra else f'#@#img\\E{image}\\{extra_index:03d}.jpg',
+            'ImageName': f'{image_path}\\#{id_key}#\\{check_header_tail(image_path, id_key) if image == "Logo" else "icon"}.jpg' if not is_extra else f'#@#img\\E{image}\\{extra_index:03d}.jpg',
             'LeftMouseUpAction': f'[steam://rungameid/#{id_key}#]' if not is_extra else f'[#{id_key}Path#]',
             'Hidden': f'{HiddenValue}',
             'Group': f'Games | {section_prefix}G{index}',
@@ -101,6 +104,22 @@ def create_meter(id_key, index, image, image_path, search, is_hidden, is_extra=F
         }
     }
     return meter_data
+#__________________________________________________________________________________________________________________________#
+#--------------------------------------------Function to check image existance---------------------------------------------#
+def check_header_tail(image_path, id_key):
+    idx = int(id_key[2:])
+    appid = processed_ids[idx - 1]
+    tail = ["header", "library_header", f"library_header_{locale}"]
+    for t in tail:
+        if os.path.exists(f'{image_path}/{appid}/{t}.jpg'):
+            return t
+    items = os.listdir(f"{image_path}/{appid}")
+    for item in items:
+        if os.path.isdir(f"{image_path}/{appid}/{item}"):
+            for t in tail:
+                if os.path.exists(f'{image_path}/{appid}/{item}/{t}.jpg'):
+                    return f"{item}/{t}"
+
 #__________________________________________________________________________________________________________________________#
 #------------------------------------------------Function to write meters--------------------------------------------------#
 
@@ -179,6 +198,11 @@ def write_game_info(processed_ids, games_info):
 # 1: Set Variables
 variables = get_variables('SkinInfo.inc')
 steam_path = variables.get('steampath', '')
+game_dir = variables.get('gamedir', '')
+game_dir = game_dir.split(',')
+for i in range(len(game_dir)):
+    game_dir[i] = game_dir[i].strip() + '/steamapps'
+locale = variables.get('locale', '').lower()
 manifest_path = steam_path + '/steamapps'
 image_path = steam_path + '/appcache/librarycache'
 RainmeterPath = variables.get('rainmeterexe', '')
@@ -193,8 +217,11 @@ subprocess.call([RainmeterPath, '!DeactivateConfig', fr'{skinPath}', fr'{config_
 # 2: Find installed game IDs and Names from appmanifest files
 status = "Processing appmanifest files..."
 update_rainmeter_status(status)
-appmanifest_files = [f for f in os.listdir(os.path.join(manifest_path)) if f.startswith('appmanifest_')]
-processed_ids, games_info = process_appmanifest_files(appmanifest_files, manifest_path)
+for manifest_path in game_dir:
+    appmanifest_files = [f for f in os.listdir(os.path.join(manifest_path)) if f.startswith('appmanifest_')]
+    processed_ids, games_info = process_appmanifest_files(appmanifest_files, manifest_path)
+#appmanifest_files = [f for f in os.listdir(os.path.join(manifest_path)) if f.startswith('appmanifest_')]
+#processed_ids, games_info = process_appmanifest_files(appmanifest_files, manifest_path)
 
 # 3: Write new GamesInfo.inc
 status = "Writing new GamesInfo.inc..."
@@ -204,8 +231,9 @@ write_game_info(processed_ids, games_info)
 # 4: Set variables for meters creation
 game_count = len(processed_ids)
 config_extra_games = CaseSensitiveConfigParser()
-config_extra_games.read('NonSteamGames.inc')
-extra_games_count = int(config_extra_games['Variables']['ExtraGamesCount'])
+config_extra_games.read('NonSteamGames.inc', encoding='utf-8')
+extra_games_count = int(config_extra_games.get('Variables', 'ExtraGamesCount', fallback='0'))
+#extra_games_count = int(config_extra_games['Variables']['ExtraGamesCount'])
 
 # 5: Create meters dynamically
 status = "Creating Dynamic Meters Files..."

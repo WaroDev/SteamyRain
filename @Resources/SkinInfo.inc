@@ -2,6 +2,8 @@
 ;-------------------------------------------------PATHS
 SteamPath=C:\Program Files (x86)\Steam
 RainMeterEXE=C:\Program Files\Rainmeter\Rainmeter.exe
+GameDir = C:\Program Files (x86)\Steam
+Locale = german
 ;-----------------------------------------------GENERAL
 Mode=0
 Mini=0
