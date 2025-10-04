@@ -22,8 +22,8 @@ It is using a python script to fetch the required information and images from yo
 ## Add Non-Steam Games
 This part of the process has to be done manually and will only take effect after using 'Scan for Games'
 
-1.Open the @Resrouces\NonSteamGames.inc
-2.Add each game using this format:
+1. Open the @Resrouces\NonSteamGames.inc
+2. Add each game using this format:
 [code]
 Egame#="TheNameOfMyGame"
 Egame#Path="ThePathToLaunchMyGame"
@@ -38,10 +38,34 @@ Egame2="RainmeterForums"
 Egame2Path="https://forum.rainmeter.net/index.php"
 Egame2Vis=0
 [/code]
-3.Modify the ExtraGamesCount and ExtraGamesCountPLUS variables at the top to reflect the amount of games you added.
+3. Modify the ExtraGamesCount and ExtraGamesCountPLUS variables at the top to reflect the amount of games you added.
 In our example above we would set both of these to 2.
-4.Inside @Resrouces\img\ELogo and @Resrouces\img\EIcon, add an icon and a logo for each of the games you added.
+4. Inside @Resrouces\img\ELogo and @Resrouces\img\EIcon, add an icon and a logo for each of the games you added.
 name them 00#.jpg. '#' reprensent the game number it is associated with.
 I would recomend 32x32 for the icon and 460x215 for the logo
-5.Run UpdateGames.pyw if you already followed the Setup steps until the end and already clicked on "Scan for Games". Everytime you add new entries to your NonSteamGames.inc file you have to run the python script again or put necessary infos in the *Meters.inc files manually.
-6.Done!
+5. Run UpdateGames.pyw if you already followed the Setup steps until the end and already clicked on "Scan for Games". Everytime you add new entries to your NonSteamGames.inc file you have to run the python script again or put necessary infos in the *Meters.inc files manually.
+6. Done!
+
+---
+
+## Shortcuts and Keybinds
+Header Icon:  
+RightClick = Open Steam  
+MiddleClick = Open Skin settings  
+DoubleClick = Minimise into Icon  
+  
+Icon Mode:  
+DoubleClick = Return to full view  
+  
+Tiles Section:  
+RightClick = Hide/Unhide Header  
+MiddleClick = Switch from vertical tiling to horizontal tiling and vice versa  
+ScrollUp/Down = Scroll games  
+  
+Settings Menu:  
+RightClick = Reset default value  
+
+## Search Function
+It's a fairly simple search function. You can search by Name or by ID  
+It will return partial matches for names and only identical matches for IDs.  
+It will not account for spelling errors..  
