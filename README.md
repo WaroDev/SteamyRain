@@ -23,21 +23,21 @@ It is using a python script to fetch the required information and images from yo
 This part of the process has to be done manually and will only take effect after using 'Scan for Games'
 
 1. Open the @Resrouces\NonSteamGames.inc
-2. Add each game using this format:
-[code]
+2. Add each game using this format:  
+```
 Egame#="TheNameOfMyGame"
 Egame#Path="ThePathToLaunchMyGame"
 Egame#Vis=0
-[/code]
-It does not have to be a game really. It could be any app or url. eg:
-[code]
+```
+It does not have to be a game really. It could be any app or url. eg:  
+```
 Egame1="Photoshop"
 Egame1Path="C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Adobe Photoshop 2024.lnk"
 Egame1Vis=0
 Egame2="RainmeterForums"
 Egame2Path="https://forum.rainmeter.net/index.php"
 Egame2Vis=0
-[/code]
+```
 3. Modify the ExtraGamesCount and ExtraGamesCountPLUS variables at the top to reflect the amount of games you added.
 In our example above we would set both of these to 2.
 4. Inside @Resrouces\img\ELogo and @Resrouces\img\EIcon, add an icon and a logo for each of the games you added.
